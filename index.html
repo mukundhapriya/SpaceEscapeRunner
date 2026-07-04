@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>Space Escape Runner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ============ GAME CANVAS ============ -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- ============ TOAST (achievements) ============ -->
+    <div id="toast" class="toast hidden">
+      <span id="toastIcon">🏆</span>
+      <div>
+        <div class="toast-title">Achievement Unlocked</div>
+        <div id="toastText" class="toast-text"></div>
+      </div>
+    </div>
+
+    <!-- ============ SPLASH SCREEN ============ -->
+    <section id="splashScreen" class="screen">
+      <div class="logo-wrap">
+        <h1 class="game-logo">SPACE<span>ESCAPE</span>RUNNER</h1>
+        <p class="tagline">Outrun the void. Beat your best.</p>
+      </div>
+
+      <div class="splash-stat">
+        <span class="stat-label">High Score</span>
+        <span id="splashHighScore" class="stat-value">0</span>
+      </div>
+
+      <div class="menu-buttons">
+        <button id="playBtn" class="btn btn-primary">▶ PLAY</button>
+        <button id="settingsBtn" class="btn btn-ghost">⚙ SETTINGS</button>
+        <button id="achievementsBtn" class="btn btn-ghost">🏆 ACHIEVEMENTS</button>
+      </div>
+
+      <p class="hint">Swipe or drag to move · Arrow keys / A-D on desktop</p>
+    </section>
+
+    <!-- ============ GAMEPLAY HUD ============ -->
+    <section id="hud" class="hud hidden">
+      <div class="hud-top">
+        <button id="pauseBtn" class="icon-btn">❚❚</button>
+        <div class="hud-center">
+          <div class="hud-score" id="hudScore">0</div>
+          <div class="hud-sub">
+            <span id="hudDistance">0 m</span>
+            <span class="dot">•</span>
+            <span id="hudCoins">🪙 0</span>
+          </div>
+        </div>
+        <div class="hud-lives" id="hudLives">❤❤❤</div>
+      </div>
+      <div id="shieldTimerWrap" class="shield-timer hidden">
+        <div class="shield-label">🛡 SHIELD</div>
+        <div class="shield-bar"><div id="shieldBarFill" class="shield-bar-fill"></div></div>
+      </div>
+    </section>
+
+    <!-- ============ MOBILE TOUCH BUTTONS (optional) ============ -->
+    <div id="touchControls" class="touch-controls hidden">
+      <button id="btnLeft" class="touch-btn">◀</button>
+      <button id="btnRight" class="touch-btn">▶</button>
+    </div>
+
+    <!-- ============ PAUSE MENU ============ -->
+    <section id="pauseMenu" class="screen overlay hidden">
+      <h2 class="panel-title">PAUSED</h2>
+      <div class="menu-buttons">
+        <button id="resumeBtn" class="btn btn-primary">RESUME</button>
+        <button id="restartFromPauseBtn" class="btn btn-ghost">RESTART</button>
+        <button id="homeFromPauseBtn" class="btn btn-ghost">HOME</button>
+      </div>
+    </section>
+
+    <!-- ============ GAME OVER SCREEN ============ -->
+    <section id="gameOverScreen" class="screen overlay hidden">
+      <h2 class="panel-title danger">SHIP LOST</h2>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-label">Final Score</span>
+          <span id="finalScore" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">High Score</span>
+          <span id="finalHighScore" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Coins</span>
+          <span id="finalCoins" class="stat-value">0</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Distance</span>
+          <span id="finalDistance" class="stat-value">0 m</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-label">Time Survived</span>
+          <span id="finalTime" class="stat-value">0s</span>
+        </div>
+      </div>
+      <div class="menu-buttons">
+        <button id="restartBtn" class="btn btn-primary">↻ RESTART</button>
+        <button id="homeBtn" class="btn btn-ghost">🏠 HOME</button>
+        <button id="shareBtn" class="btn btn-ghost">📤 SHARE SCORE</button>
+      </div>
+    </section>
+
+    <!-- ============ SETTINGS SCREEN ============ -->
+    <section id="settingsScreen" class="screen overlay hidden">
+      <h2 class="panel-title">SETTINGS</h2>
+
+      <div class="setting-row">
+        <span>Music</span>
+        <button id="musicToggle" class="toggle-btn">ON</button>
+      </div>
+      <div class="setting-row">
+        <span>Sound Effects</span>
+        <button id="soundToggle" class="toggle-btn">ON</button>
+      </div>
+      <div class="setting-row">
+        <span>Vibration</span>
+        <button id="vibrationToggle" class="toggle-btn">ON</button>
+      </div>
+      <div class="setting-row">
+        <span>Difficulty</span>
+        <div class="difficulty-select">
+          <button class="diff-btn" data-diff="easy">Easy</button>
+          <button class="diff-btn" data-diff="normal">Normal</button>
+          <button class="diff-btn" data-diff="hard">Hard</button>
+        </div>
+      </div>
+
+      <div class="menu-buttons">
+        <button id="closeSettingsBtn" class="btn btn-primary">CLOSE</button>
+      </div>
+    </section>
+
+    <!-- ============ ACHIEVEMENTS SCREEN ============ -->
+    <section id="achievementsScreen" class="screen overlay hidden">
+      <h2 class="panel-title">ACHIEVEMENTS</h2>
+      <div id="achievementsList" class="achievements-list"></div>
+      <div class="menu-buttons">
+        <button id="closeAchievementsBtn" class="btn btn-primary">CLOSE</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
